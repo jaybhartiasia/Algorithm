@@ -1,0 +1,81 @@
+
+que =[[1,10],[30,50],[5,20],[10,40],[10,20],[20,50],[5,30]]
+#que =[[5,10],[0,20],[25,40],[35,45]]
+print('Input >>>',que)
+
+cnt=0
+qMap ={}
+l1=[]
+ky =()
+#------clear-------------
+for l  in que:
+    if l[0] in qMap:
+        l1 = qMap.get(l[0])
+        l1.append(l[1])
+        l1.sort()
+        qMap.update({l[0]:l1})
+    else:
+         qMap.update({l[0]:[l[1]]})
+print('Map Created >>',qMap)
+
+#---------------------
+
+path={}
+def nextPark():
+    global cnt
+    #print('in nextPark  >> ',qMap)
+    ky =[*qMap.keys()]
+    ky.sort()
+   # print('len(ky)>>',len(ky))
+    if len(ky)>0:
+        cnt = cnt+1
+        path.update({cnt:[]})
+        return ky[0]
+    return -1
+
+def nextStart(m):
+   # print('in nextStart  >> ',qMap,m)
+    tky =[*qMap.keys()]
+    tky.sort()
+    for k in tky:
+        if not(k<m):
+            return k
+    return -1
+    
+
+def disEnd(n):
+    global cnt
+    tl=[]
+   # print('in DisEnd  >> ',qMap,n)
+    if n in qMap :
+        tl=qMap.get(n)
+        r = tl[0]
+       # print('path >>', n,'-->',r)
+        plst=path.get(cnt)
+        plst.append([n,r])
+        path.update({cnt:plst})
+        tl.pop(0)
+        if len(tl)>0 :
+            qMap.update({n:tl})
+        else:
+            qMap.pop(n)
+        return r
+    return -1
+
+
+#path=[]
+pStPoint = nextPark()
+while not(pStPoint<0):
+    e= disEnd(pStPoint)
+    #print('f e >',e)
+    while not(e==-1):
+        s=nextStart(e)
+        e= disEnd(s)
+        #print('e >',e)
+    pStPoint =nextPark()
+
+#print(qMap)
+#print('Path >>',path)
+for p in path:
+    print('Path',p,'>>>',path.get(p))
+print('Total Path Count >>', cnt)
